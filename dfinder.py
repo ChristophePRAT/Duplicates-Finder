@@ -3,6 +3,7 @@ import sys
 import os
 import hashlib
 
+deletedSize = 0
 
 def chunk_reader(fobj, chunk_size=1024):
     """Generator that reads a file in chunks of bytes"""
@@ -93,15 +94,29 @@ def check_for_duplicates(paths, hash=hashlib.sha1):
                     whichOne = input("Which file should be deleted? (left/right)")
                     if whichOne == "left" or whichOne == "Left" or whichOne == "LEFT" or whichOne == "l":
                         print(f"Deleting {filename}... \n")
+                        # deletedSize += os.path.getsize(filename)
                         os.remove(filename)
+
+                        continue
                     else:
                         print(f"Deleting {duplicate}... \n")
+                        # deletedSize += os.path.getsize(duplicate)
                         os.remove(duplicate)
+                        
+                        continue
+                    print(deletedSize)
             else:
                 hashes_full[full_hash] = filename
+    print(f'Deleted {deletedSize}')
 def main():
+    print("Oh no")
     if sys.argv[1:]:
-        check_for_duplicates(sys.argv[1:])
+        try:
+            check_for_duplicates(sys.argv[1:])
+        except:
+            KeyboardInterrupt
+        finally:
+            print(f"\nDeleted {deletedSize}")
     else:
         print("Please pass the paths to check as parameters to the script")
  
